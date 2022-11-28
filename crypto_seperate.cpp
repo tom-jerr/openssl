@@ -85,13 +85,19 @@ string sha1_digest(string msg) {
 // ================ SHA1   End ===============================
 
 // ================ Helper Start =============================
-
+/*
+    DES ECB模式明密文转换为DES_cblock函数
+*/
 void convert_string_to_des_block(string str, DES_cblock& output) {
     for (int i = 0; i < 8; ++i) {
         output[i] = str[i];
     }
 }
 // ================ Helper End ================================
+/*
+    进制转换函数
+*/
+
 void stream2hex(const std::string str, std::string& hexstr, bool capital = false) {
     hexstr.resize(str.size() * 2);
     const size_t a = capital ? 'A' - 1 : 'a' - 1;

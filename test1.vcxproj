@@ -148,7 +148,7 @@
     <ClInclude Include="bits\stdc++.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="crypto_seperate.cpp" />
+    <ClCompile Include="bit_dec_transfer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

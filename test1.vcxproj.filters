@@ -20,7 +20,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="crypto_seperate.cpp">
+    <ClCompile Include="bit_dec_transfer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

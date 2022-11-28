@@ -55,16 +55,61 @@ string mod_exp(string a, string e, string m) {
 	return result;
 }
 
+BIGNUM* gcd_exp(BIGNUM* a, BIGNUM* b, BIGNUM* x, BIGNUM* y) {
+	if (BN_is_zero(b)) {
+		BN_zero(y); BN_one(x);
+		return a;
+	}
+	BN_CTX* ctx1=NULL; ctx1 = BN_CTX_new();
+	BN_CTX_start(ctx1);
+
+	BIGNUM* mod_; BIGNUM* dv; BIGNUM* rem; BIGNUM* mult;
+	mod_ = BN_new(); dv = BN_new(); rem = BN_new(); mult = BN_new();
+	BN_nnmod(mod_, a, b, ctx1);
+	BIGNUM* temp = BN_new();
+	temp = gcd_exp(b, mod_, y, x);
+	BN_div(dv, rem, a, b, ctx1);
+	BN_mul(mult, dv, x, ctx1);
+	BN_sub(y, y, mult);
+	BN_CTX_end(ctx1);
+	BN_CTX_free(ctx1);
+	BN_free(mod_); BN_free(dv); BN_free(rem); BN_free(mult); 
+	return temp;
+}
+
+string mod_inverse(string a, string m) {
+	BIGNUM* a1; BIGNUM* m1; BIGNUM* x; BIGNUM* y; BIGNUM* r1 = NULL;
+	char* res = NULL;
+	a1 = BN_new(); m1 = BN_new(); x = BN_new(); y = BN_new(); 
+	/*r1 = BN_new();*/
+	BN_CTX* ctx = NULL;
+	ctx = BN_CTX_new();
+	BN_CTX_start(ctx);
+	BN_dec2bn(&a1, a.c_str()); BN_dec2bn(&m1, m.c_str());
+	r1 = gcd_exp(a1, m1, x, y);
+
+	res = BN_bn2dec(x);
+	return res;
+	BN_CTX_end(ctx);
+	BN_CTX_free(ctx);
+	BN_free(a1); BN_free(m1); BN_free(r1); BN_free(x); BN_free(y);
+}
+
 int main(){
-	/*string result = mod_exp("82019154470699086128524248488673846867876336512717", "82019154470699",
-                    "8201915447069908612852424848867384686787636512717");*/
-	string result = mod_exp("2","5","5");
-	printf("%s\n", result.c_str());
-	if (result == "2"){
+	//string result = mod_exp("82019154470699086128524248488673846867876336512717", "82019154470699",
+	//                   "8201915447069908612852424848867384686787636512717");
+	//string result = mod_exp("2","5","5");
+	//printf("%s\n", result.c_str());
+	//if (result == "2"){
+	//	printf("This is True\n");
+	//	return 0;
+	//}
+	//
+	//printf("This is not True\n");
+	string result = mod_inverse("5", "14");
+	if (result == "3") {
 		printf("This is True\n");
 		return 0;
 	}
-	
-	printf("This is not True\n");
 	return 0;
 }

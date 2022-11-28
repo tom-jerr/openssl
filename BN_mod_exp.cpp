@@ -10,32 +10,53 @@ using namespace std;
 //  返回值:
 //      string类型, 返回计算的结果, 表示为10进制数字符串
 string mod_exp(string a, string e, string m) {
-	//BIGNUM* a1; BIGNUM* e1; BIGNUM* m1;BIGNUM* ans; BIGNUM* temp;
-	//BN_CTX *ctx=NULL;
-	//ctx=BN_CTX_new();
-	//BN_CTX_start(ctx);
+	BIGNUM* a1; BIGNUM* a2; BIGNUM* e1; BIGNUM* m1; BIGNUM* ans; BIGNUM* temp;
+	BN_CTX *ctx=NULL;
+	ctx=BN_CTX_new();
+	BN_CTX_start(ctx);
 
-	//a1=BN_new();e1=BN_new();m1=BN_new();ans=BN_new();temp=BN_new();
-	//BN_dec2bn(&a1, a.c_str()); BN_dec2bn(&e1, e.c_str()); BN_dec2bn(&m1, m.c_str());
-	//
-	//BN_one(ans);
-	//while (!BN_is_zero(e1)){
-	//	BN_mul(a1,a1,a1,ctx); BN_nnmod(a1,a1,m1,ctx);
-	//	BN_copy(temp, e1);
-	//	int length = BN_num_bits(temp);
-	//	BN_rshift(temp,temp,length-1);
-	//	if (BN_is_one(temp)){
-	//		BN_mul(ans,a1,ans,ctx);
-	//		BN_nnmod(ans,ans,m1,ctx);
-	//	}
-	//	BN_rshift1(e1,e1);
-	//}
-	////实现BN的快速幂乘法
-	//char* result = BN_bn2dec(ans);
-	//BN_CTX_end(ctx);
-	//BN_CTX_free(ctx);
-	//BN_free(a1);BN_free(e1);BN_free(m1);BN_free(ans);BN_free(temp);
-	BIGNUM* a1; BIGNUM* e1; BIGNUM* m1; BIGNUM* res;
+	a1 = BN_new(); a2 = BN_new(); e1 = BN_new(); m1 = BN_new(); ans = BN_new(); temp = BN_new();
+	BN_dec2bn(&a1, a.c_str()); BN_dec2bn(&a2, a.c_str()); BN_dec2bn(&e1, e.c_str()); BN_dec2bn(&m1, m.c_str());
+	BN_one(ans);
+	int length = BN_num_bits(e1); int flag = 0;
+	while ((length - 1) > 0){
+		BN_mul(ans,ans,ans,ctx); 
+		BN_nnmod(ans,ans,m1,ctx);
+		BN_copy(temp, e1);
+		int length1 = BN_num_bits(temp);
+		
+		if (length1 != length - 1 && flag == 1) {
+			length = length - 1;
+			BN_lshift(e1, e1, length - length1);
+			BN_set_bit(e1, 0);
+			for (int i = 1; i <= length - length1 ; i++) {
+				BN_clear_bit(e1, i);
+			}
+			BN_copy(temp, e1);
+		}
+		else {
+			length = length1;
+			flag = 1;
+		}
+		BN_rshift(temp,temp,length - 1);
+		if (BN_is_one(temp)){
+			BN_mul(ans,a1,ans,ctx);
+			BN_nnmod(ans,ans,m1,ctx);
+		}
+		BN_mask_bits(e1,length - 1);
+	}
+	/*if (BN_is_zero(e1)) {
+		BN_mul(ans, ans, ans, ctx);
+		BN_nnmod(ans, ans, m1, ctx);
+	}*/
+	//实现BN的快速幂乘法
+	char* result = BN_bn2dec(ans);
+	BN_CTX_end(ctx);
+	BN_CTX_free(ctx);
+	BN_free(a1);BN_free(e1);BN_free(m1);BN_free(ans);BN_free(temp);
+	return result;
+
+	/*BIGNUM* a1; BIGNUM* e1; BIGNUM* m1; BIGNUM* res;
 	int flag=0;
 	char* result=NULL;
 	BN_CTX *ctx=NULL;
@@ -52,7 +73,8 @@ string mod_exp(string a, string e, string m) {
 	BN_CTX_end(ctx);
 	BN_CTX_free(ctx);
 	BN_free(a1);BN_free(e1);BN_free(m1);BN_free(res); 
-	return result;
+	return result;*/
+	
 }
 
 BIGNUM* gcd_exp(BIGNUM* a, BIGNUM* b, BIGNUM* x, BIGNUM* y) {
@@ -96,20 +118,20 @@ string mod_inverse(string a, string m) {
 }
 
 int main(){
-	//string result = mod_exp("82019154470699086128524248488673846867876336512717", "82019154470699",
-	//                   "8201915447069908612852424848867384686787636512717");
-	//string result = mod_exp("2","5","5");
-	//printf("%s\n", result.c_str());
-	//if (result == "2"){
-	//	printf("This is True\n");
-	//	return 0;
-	//}
-	//
-	//printf("This is not True\n");
-	string result = mod_inverse("5", "14");
-	if (result == "3") {
+	/*string result1 = mod_exp("82019154470699086128524248488673846867876336512717", "82019154470699",
+	                   "8201915447069908612852424848867384686787636512717");*/
+	string result = mod_exp("2","9","5");
+	printf("%s\n", result.c_str());
+	if (result == "2"){
 		printf("This is True\n");
 		return 0;
 	}
+	
+	printf("This is not True\n");
+	/*string result = mod_inverse("5", "14");
+	if (result == "3") {
+		printf("This is True\n");
+		return 0;
+	}*/
 	return 0;
 }

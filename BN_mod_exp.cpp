@@ -137,10 +137,11 @@ string mod_inverse(string a, string m) {
 	r1 = gcd_exp(a1, m1, x, y);
 
 	res = BN_bn2dec(x);
-	return res;
+	
 	BN_CTX_end(ctx);
 	BN_CTX_free(ctx);
-	BN_free(a1); BN_free(m1); BN_free(r1); BN_free(x); BN_free(y);
+	BN_free(a1); BN_free(m1); BN_free(x); BN_free(y);
+	return res;
 }
 
 int main(){

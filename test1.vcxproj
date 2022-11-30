@@ -148,13 +148,7 @@
     <ClInclude Include="bits\stdc++.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bit_dec_transfer.cpp" />
-    <ClCompile Include="BN_mod_exp.cpp" />
     <ClCompile Include="BN_prime.cpp" />
-    <ClCompile Include="crypto_seperate.cpp" />
-    <ClCompile Include="prime_test.cpp" />
-    <ClCompile Include="rc4.cpp" />
-    <ClCompile Include="rsa.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
